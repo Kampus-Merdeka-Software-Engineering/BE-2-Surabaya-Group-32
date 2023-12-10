@@ -5,6 +5,7 @@ const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
 
+// tes 123
 app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/news', newsRoutes);
