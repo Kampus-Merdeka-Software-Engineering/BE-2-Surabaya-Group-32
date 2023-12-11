@@ -26,7 +26,7 @@ exports.loginUser = async (req, res) => {
       message: "Username or password cannot be empty.",
     });
   }
-  model.login(username, password, (err, data) => {
+  await model.login(username, password, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(400).send({

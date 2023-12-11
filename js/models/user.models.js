@@ -10,8 +10,8 @@ const User = function (user) {
     this.created_at = user.created_at;
 }
 
-User.getFirstUser = result => {
-    sql.query("SELECT * FROM users LIMIT 1", (err, res) => {
+User.getFirstUser = async result => {
+    await sql.query("SELECT * FROM users LIMIT 1", (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(null, err);
@@ -23,12 +23,12 @@ User.getFirstUser = result => {
     });
 }
 
-User.login = (email, password, result) => {
+User.login = async (email, password, result) => {
     if (!email || !password) {
         result({ kind: "not_found" }, null);
         return;
     }
-    sql.query(`SELECT * FROM users WHERE email = ? AND password = ?`, [email, password], (err, res) => {
+    await sql.query(`SELECT * FROM users WHERE email = ? AND password = ?`, [email, password], (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(err, null);
@@ -40,8 +40,8 @@ User.login = (email, password, result) => {
     });
 }
 
-User.logout = (id, result) => {
-    sql.query(`UPDATE users SET session = NULL WHERE id = ?`, [id], (err, res) => {
+User.logout = async (id, result) => {
+    await sql.query(`UPDATE users SET session = NULL WHERE id = ?`, [id], (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(err, null);
@@ -53,8 +53,8 @@ User.logout = (id, result) => {
     });
 }
 
-User.setToken = (id, token, result) => {
-    sql.query(`UPDATE users SET session = ? WHERE id = ?`, [token, id], (err, res) => {
+User.setToken = async (id, token, result) => {
+    await sql.query(`UPDATE users SET session = ? WHERE id = ?`, [token, id], (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(err, null);
@@ -63,6 +63,7 @@ User.setToken = (id, token, result) => {
 
         console.log("users: ", res);
         result(null, res);
+
     });
 }
 

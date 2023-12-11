@@ -21,8 +21,8 @@ const Article = function (article) {
     this.created_at = article.created_at;
 };
 
-Article.getAll = result => {
-    sql.query(`SELECT 
+Article.getAll = async result => {
+    await sql.query(`SELECT 
                 articles.id, 
                 articles.tag_id, 
                 articles.article_title, 
@@ -47,8 +47,8 @@ Article.getAll = result => {
     });
 }
 
-Article.findById = (id, result) => {
-    sql.query(`SELECT
+Article.findById = async (id, result) => {
+    await sql.query(`SELECT
         articles.id,
         articles.tag_id,
         articles.article_title,
@@ -75,9 +75,9 @@ Article.findById = (id, result) => {
     });
 }
 
-Article.create = (newArticle, result) => {
+Article.create = async (newArticle, result) => {
     const { tag_id, article_title, article_content, publisher_id, image, article_link } = newArticle;
-    sql.query('SELECT id FROM users WHERE session = ?', [publisher_id], (err, res) => {
+    await sql.query('SELECT id FROM users WHERE session = ?', [publisher_id], (err, res) => {
         const publisher = res[0].id || 1;
         console.log('publisher: ', publisher);
         sql.query('INSERT INTO articles (`id`, `tag_id`, `article_title`, `article_content`, `publisher_id`, `image`, `article_link`, `created_at`) VALUES (NULL, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)', 
@@ -95,8 +95,8 @@ Article.create = (newArticle, result) => {
     });
   };
 
-Article.update = (id, article, result) => {
-    sql.query(
+Article.update = async (id, article, result) => {
+    await sql.query(
         "UPDATE articles SET tag_id = ?, article_title = ?, article_content = ?, publisher_id = ?, image = ?, article_link = ? WHERE id = ?",
         [article.tag_id, article.article_title, article.article_content, article.publisher_id, article.image, article.article_link, id],
         (err, res) => {
@@ -118,8 +118,8 @@ Article.update = (id, article, result) => {
     );
 }
 
-Article.findByTag = (tag_id, result) => {
-    sql.query(`SELECT
+Article.findByTag = async (tag_id, result) => {
+    await sql.query(`SELECT
         articles.id,
         articles.tag_id,
         articles.article_title,
@@ -146,8 +146,8 @@ Article.findByTag = (tag_id, result) => {
     });
 }
 
-Article.remove = (id, result) => {
-    sql.query("DELETE FROM articles WHERE id = ?", id, (err, res) => {
+Article.remove = async (id, result) => {
+    await sql.query("DELETE FROM articles WHERE id = ?", id, (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(null, err);

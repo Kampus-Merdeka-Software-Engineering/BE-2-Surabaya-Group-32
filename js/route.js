@@ -29,8 +29,8 @@ module.exports = (app) => {
   router.delete('/articles/delete/:id', article.deleteArticle);
 
   router.get('/', user.findFirstUser);
-  router.post('/api/auth', user.loginUser);
-  router.post('/api/logout', user.logoutUser);
+  router.post('/login', user.loginUser);
+  router.post('/logout', user.logoutUser);
   router.get('/validator', user.validateUser);
 
   router.get('/app/home', (req, res) => {

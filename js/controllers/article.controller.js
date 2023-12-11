@@ -8,7 +8,7 @@ exports.findAllArticles = async (req, res) => {
     return;
   }
 
-  model.getAll((err, data) => {
+  await model.getAll((err, data) => {
     if (err) {
       res.status(500).send({
         message: err.message || "Some error occured while retrieving articles.",
@@ -26,7 +26,7 @@ exports.findOneArticle = async (req, res) => {
     return;
   }
 
-  model.findById(req.params.id, (err, data) => {
+  await model.findById(req.params.id, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(400).send({
@@ -46,9 +46,9 @@ exports.findOneArticle = async (req, res) => {
   }
 };
 
-exports.createArticle = (req, res) => {
+exports.createArticle = async (req, res) => {
   const { tag_id, article_title, article_content, article_link} = req.body;
-  const publisher_id = getCookie("login-token", req.headers.cookie);
+  const publisher_id = await getCookie("login-token", req.headers.cookie);
   const image = req.file ? req.file.filename : null;
 
   const newArticle = {
@@ -60,7 +60,7 @@ exports.createArticle = (req, res) => {
     article_link,
   };
 
-  model.create(newArticle, (err, data) => {
+  await model.create(newArticle, (err, data) => {
     if (err) {
       res.status(500).send({
         message:
@@ -72,10 +72,10 @@ exports.createArticle = (req, res) => {
   });
 };
 
-exports.updateArticle = (req, res) => {
+exports.updateArticle = async (req, res) => {
   const { tag_id, article_title, article_content, article_link} = req.body;
   const image = req.file ? req.file.filename : null;
-  const publisher_id = getCookie("login-token", req.headers.cookie);
+  const publisher_id = await getCookie("login-token", req.headers.cookie);
 
   const updatedArticle = {
     tag_id,
@@ -86,7 +86,7 @@ exports.updateArticle = (req, res) => {
     article_link,
   };
 
-  model.update(req.params.id, updatedArticle, (err, data) => {
+  await model.update(req.params.id, updatedArticle, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(400).send({
@@ -103,8 +103,8 @@ exports.updateArticle = (req, res) => {
   });
 };
 
-exports.getArticleByTag = (req, res) => {
-  model.findByTag(req.params.id, (err, data) => {
+exports.getArticleByTag = async (req, res) => {
+  await model.findByTag(req.params.id, (err, data) => {
     if (err) {
       res.status(500).send({
         message: err.message || "Some error occured while retrieving articles.",
@@ -115,8 +115,8 @@ exports.getArticleByTag = (req, res) => {
   });
 }
 
-exports.deleteArticle = (req, res) => {
-  model.remove(req.params.id, (err, data) => {
+exports.deleteArticle = async (req, res) => {
+  await model.remove(req.params.id, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(400).send({
